@@ -66,8 +66,13 @@ func _connected_to_server():
 	
 func _server_disconnected():
 	print("disconnected")
-	get_tree().set_network_peer(null)
-	client.disconnect_peer(get_tree().get_network_unique_id())
+	reset_network_connection()
+	
+func reset_network_connection():
+	for child in Objects.get_children():
+		child.queue_free()
+	if get_tree().has_network_peer():
+		get_tree().network_peer = null
 	get_tree().change_scene("res://Offline/Menu.tscn")
 
 remote func instance_player(id, _username) -> void:

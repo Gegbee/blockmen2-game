@@ -67,8 +67,8 @@ func _process(delta):
 		#invincible_time = puppet_invincible_time
 		pass
 		
-	color_change_time += delta
 	if invincible:
+		color_change_time += delta
 		if color_change_time >= 0.3:
 			color_change_time = 0.0
 			if modulate == Color("5782ee"):
@@ -76,6 +76,7 @@ func _process(delta):
 			else:
 				modulate = "5782ee"
 	else:
+		color_change_time = 0.0
 		modulate = "ffffff"
 
 func _physics_process(delta):
@@ -90,7 +91,7 @@ func move(move_vel : Vector2):
 	vel = move_and_slide(vel)
 	return vel
 	
-func damage(dmg : int, impulse_dir : Vector2 = Vector2(), strength : float = 0):
+sync func damage(dmg : int, impulse_dir : Vector2 = Vector2(), strength : float = 0):
 	set_health(health - dmg)
 	impulse(impulse_dir.normalized(), strength)
 	print(self.name + " health: " + str(health) + " / " + str(MAX_HEALTH))
@@ -98,32 +99,25 @@ func damage(dmg : int, impulse_dir : Vector2 = Vector2(), strength : float = 0):
 func set_health(new_health : int):
 	if invincible:
 		return
-	if new_health < health:
-		damage_color_change()
-	elif new_health > health:
-		healing_color_change()
-	if new_health <= 0 and health > 0:
+#	if new_health < health:
+#		damage_color_change()
+#	elif new_health > health:
+#		healing_color_change()
+	if new_health <= 0: #and health > 0:
 		kys()
 	health = new_health
 	if health_bar:
 		health_bar.updateHealth(health)
 	
 func kys():
-	emit_signal("OnEntityDead")
-	# queue_free()
+	if is_network_master():
+		print("DEAD AF")
+		emit_signal("OnEntityDead")
+		rpc("destroy")
 	
 func impulse(dir : Vector2, strength: float):
 	impulse_strength = strength
 	impulse_vector = dir * strength / knockback_resistance
 
-func damage_color_change():
-	modulate = "f32222"
-	yield(get_tree().create_timer(0.3), "timeout")
-	if is_instance_valid(self):
-		modulate = "ffffff"
-	
-func healing_color_change():
-	modulate = "1de845"
-	yield(get_tree().create_timer(0.3), "timeout")
-	if is_instance_valid(self):
-		modulate = "ffffff"
+sync func destroy():
+	queue_free()

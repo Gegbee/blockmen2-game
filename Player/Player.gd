@@ -24,6 +24,7 @@ func _ready():
 	#username_label = Global.instance_node(USERNAME_LABEL, Objects)
 	#username_label.offset = Vector2(-66, -36)
 	if is_network_master():
+		Global.player_master = self
 		activate_camera()
 
 func activate_camera():
@@ -55,10 +56,10 @@ func _process(delta : float):
 				cur_weapon.shoot_dir = Vector2(cos(rotation), sin(rotation))
 				if cur_weapon.automatic:
 					if Input.is_action_pressed("attack"):
-						cur_weapon.rpc("attack", rotation)
+						cur_weapon.rpc("attack", int(name), rotation)
 				else:
 					if Input.is_action_just_pressed("attack"):
-						cur_weapon.rpc("attack", rotation)
+						cur_weapon.rpc("attack", int(name), rotation)
 				if Input.is_action_just_pressed("reload"):
 					cur_weapon.rpc("reload")
 	else:
@@ -82,3 +83,8 @@ func puppet_position_set(new_value) -> void:
 #		rset_unreliable("puppet_position", global_position)
 #		rset_unreliable("puppet_rotation", rotation_degrees)
 #		rset_unreliable("puppet_velocity", velocity)
+
+func _exit_tree():
+	if is_network_master():
+		Global.player_master = null
+		

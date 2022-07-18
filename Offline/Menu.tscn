@@ -49,11 +49,11 @@ anchor_right = 1.0
 margin_bottom = 131.0
 
 [node name="Label" type="Label" parent="CenterContainer3"]
-margin_left = 367.0
+margin_left = 216.0
 margin_top = 58.0
-margin_right = 592.0
+margin_right = 744.0
 margin_bottom = 72.0
-text = "Blockmen Design Theory Prototype"
+text = "Blockmen; If you get sent back to menu its because the server reset or went down"
 align = 1
 valign = 1
 

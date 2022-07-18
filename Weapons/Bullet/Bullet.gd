@@ -42,7 +42,7 @@ func _physics_process(delta):
 		if get_slide_count() > 0:
 			var collision = get_slide_collision(0)
 			if collision.collider.is_in_group("entity"):
-				collision.collider.damage(damage)
+				collision.collider.rpc("damage", damage)
 			rpc("destroy")
 		if (global_position - initial_position).length() > 2000:
 			rpc("destroy")

@@ -68,7 +68,7 @@ remotesync func reload():
 	#	player_ui.reload_ammo(reload_time)
 		reload_timer.start(reload_time)
 	
-remotesync func attack(player_rotation : float):
+remotesync func attack(id : int, player_rotation : float):
 	if can_fire and current_magazine > 0:
 		current_downtime = 0
 		can_fire = false
@@ -85,8 +85,8 @@ remotesync func attack(player_rotation : float):
 				bullet_instance.global_position = shoot_pos.global_position
 			else:
 				bullet_instance.global_position = global_position
-			bullet_instance.name = "Bullet" + get_parent().name + str(Network.networked_object_name_index)
-			bullet_instance.set_network_master(get_tree().get_network_unique_id())
+			bullet_instance.name = "Bullet" + str(id) + str(Network.networked_object_name_index)
+			bullet_instance.set_network_master(id)
 			Network.networked_object_name_index += 1
 			Objects.add_child(bullet_instance)
 		current_accuracy += accuracy_decrease

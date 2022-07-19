@@ -15,6 +15,8 @@ const RESET_POWER = preload("res://Menu/ResetPower.tscn")
 var networked_object_name_index = 0 setget networked_object_name_index_set
 puppet var puppet_networked_object_name_index = 0 setget puppet_networked_object_name_index_set
 
+var upnp : UPNP = null
+
 func _ready():
 #	if OS.get_name() == "Windows":
 #		ip_address = IP.get_local_addresses()[3]
@@ -43,6 +45,14 @@ func _network_peer_disconnected(id):
 		Objects.get_node(str(id)).queue_free()
 		
 func create_server():
+#	if upnp == null:
+#		upnp = UPNP.new()
+#		upnp.discover()
+#		ip_address = upnp.query_external_address()
+#	var err = upnp.add_port_mapping(DEFAULT_PORT)
+#	if err != upnp.UPNP_RESULT_SUCCESS:
+#		push_error("Unable to port forward" + str(err))
+		
 	server = NetworkedMultiplayerENet.new()
 	server.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	get_tree().set_network_peer(server)
@@ -51,7 +61,7 @@ func create_server():
 	var reset_power = Global.instance_node(RESET_POWER, Objects)
 	# INSTANCE SERVER'S PLAYER
 	reset_power.set_network_master(get_tree().get_network_unique_id())
-	
+		
 func join_server():
 	client = NetworkedMultiplayerENet.new()
 	client.create_client(ip_address, DEFAULT_PORT)

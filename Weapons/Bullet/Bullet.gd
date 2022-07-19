@@ -39,6 +39,7 @@ func _physics_process(delta):
 		var _movement = move_and_slide(puppet_velocity)
 		
 	if get_tree().is_network_server():
+		print("yes")
 		if get_slide_count() > 0:
 			var collision = get_slide_collision(0)
 			if collision.collider.is_in_group("entity"):

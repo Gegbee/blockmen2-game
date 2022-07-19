@@ -1,6 +1,7 @@
 extends Node
 
 var player_master : Entity2D = null
+var game_ui : CanvasLayer = null
 
 func instance_node_at_location(node: Object, parent: Object, location: Vector2):
 	var node_instance = instance_node(node, parent)

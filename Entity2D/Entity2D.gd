@@ -112,6 +112,7 @@ func set_health(new_health : int):
 func kys():
 	if is_network_master():
 		print("DEAD AF")
+		Global.game_ui.show_respawn_button()
 		emit_signal("OnEntityDead")
 		rpc("destroy")
 	
